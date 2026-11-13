@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Coordinate & Mask Inspector</title>
+<style>
+  body { margin: 0; background: #1a1a1a; color: #eee; font-family: sans-serif; }
+  #container { position: relative; width: 1376px; height: 768px; margin: 20px auto; border: 1px solid #444; }
+  img#bg { position: absolute; top: 0; left: 0; width: 1376px; height: 768px; }
+  canvas#overlay { position: absolute; top: 0; left: 0; width: 1376px; height: 768px; pointer-events: none; }
+  #controls { text-align: center; padding: 10px; background: #222; }
+  button { padding: 8px 16px; margin: 4px; font-weight: bold; cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="controls">
+  <button onclick="loadRoom('kitchen')">Kitchen</button>
+  <button onclick="loadRoom('living')">Living Room</button>
+  <button onclick="loadRoom('bedroom')">Bedroom</button>
+  <span id="coords" style="margin-left: 20px; font-family: monospace;">X: 0, Y: 0</span>
+</div>
+<div id="container">
+  <img id="bg" src="../assets/studio/kitchen-warm-neutral.jpg">
+  <canvas id="overlay" width="1376" height="768"></canvas>
+</div>
+<script>
+  const bg = document.getElementById('bg');
+  const canvas = document.getElementById('overlay');
+  const ctx = canvas.getContext('2d');
+  const coords = document.getElementById('coords');
+  const container = document.getElementById('container');
+
+  container.addEventListener('mousemove', (e) => {
+    const rect = container.getBoundingClientRect();
+    const x = Math.round(e.clientX - rect.left);
+    const y = Math.round(e.clientY - rect.top);
+    coords.textContent = `X: ${x}, Y: ${y}`;
+  });
+
+  function loadRoom(room) {
+    if (room === 'kitchen') {
+      bg.src = '../assets/studio/kitchen-warm-neutral.jpg';
+    } else if (room === 'living') {
+      bg.src = '../assets/studio/living-warm-neutral.jpg';
+    } else if (room === 'bedroom') {
+      bg.src = '../assets/studio/bedroom-warm-neutral.jpg';
+    }
+  }
+</script>
+</body>
+</html>
+

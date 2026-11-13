@@ -3565,7 +3565,7 @@ button, a {
    DEDICATED PROJECTS PAGE SECTION (/projects)
    ========================================================================== */
 .projects-page-section {
-  padding-top: 90px;
+  padding-top: 0;
   min-height: 85vh;
   background: #FAF8F5;
 }
@@ -3692,7 +3692,7 @@ button, a {
 
 @media (max-width: 768px) {
   .projects-page-section {
-    padding-top: 76px;
+    padding-top: 0;
   }
   .projects-page-hero {
     padding: 36px 0 26px;
@@ -3840,14 +3840,16 @@ button, a {
    DEDICATED TRY IT OUT INTERACTIVE DESIGN STUDIO (/try-it-out)
    ========================================================================== */
 .studio-page-section {
+  padding: 0;
   padding-top: 0;
-  min-height: calc(100vh - 80px);
+  min-height: 0;
   background: #FAF8F5;
+  overflow-x: clip;
 }
 
 .studio-header {
   text-align: center;
-  padding: 30px 20px 22px;
+  padding: 22px 20px 22px;
   background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);
   border-bottom: 1px solid rgba(197, 155, 75, 0.18);
   box-sizing: border-box;
@@ -4036,6 +4038,7 @@ button, a {
    ========================================================================== */
 .studio-workspace-container {
   max-width: 1320px;
+  min-width: 0;
   margin: 0 auto;
   padding: 24px 20px 80px;
 }
@@ -4116,9 +4119,15 @@ button, a {
 /* Studio Main 2-Column Grid (Left: Controls, Right: Visualizer) */
 .studio-grid {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
   gap: 28px;
   align-items: start;
+}
+
+.studio-grid > *,
+.studio-visualization-column,
+.room-viewport {
+  min-width: 0;
 }
 
 /* Left Customization Panel */
@@ -4475,7 +4484,7 @@ button, a {
   -webkit-mask-size: 100% 100%;
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
-  mix-blend-mode: multiply;
+  mix-blend-mode: color;
   opacity: 0;
   transition: opacity 0.3s ease, background-color 0.3s ease;
 }
@@ -4496,6 +4505,10 @@ button, a {
 #mask-kitchen-backsplash {
   mask-image: url('assets/studio/masks/kitchen-backsplash.png');
   -webkit-mask-image: url('assets/studio/masks/kitchen-backsplash.png');
+}
+#mask-kitchen-hardware {
+  mask-image: url('assets/studio/masks/kitchen-hardware.png');
+  -webkit-mask-image: url('assets/studio/masks/kitchen-hardware.png');
 }
 
 /* Living Room Surface Masks */
@@ -4518,6 +4531,14 @@ button, a {
 #mask-living-wood {
   mask-image: url('assets/studio/masks/living-wood.png');
   -webkit-mask-image: url('assets/studio/masks/living-wood.png');
+}
+#mask-living-coffee-table {
+  mask-image: url('assets/studio/masks/living-coffee-table.png');
+  -webkit-mask-image: url('assets/studio/masks/living-coffee-table.png');
+}
+#mask-living-metal {
+  mask-image: url('assets/studio/masks/living-metal.png');
+  -webkit-mask-image: url('assets/studio/masks/living-metal.png');
 }
 
 /* Bedroom Surface Masks */
@@ -4775,6 +4796,9 @@ button, a {
   .studio-grid {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+  .studio-visualization-column {
+    order: -1;
   }
   .presets-track {
     grid-template-columns: repeat(5, minmax(130px, 1fr));

@@ -1937,6 +1937,7 @@
   const valLivingCurtains = document.getElementById('valLivingCurtains');
   const valLivingAccent = document.getElementById('valLivingAccent');
   const valLivingWood = document.getElementById('valLivingWood');
+  const valLivingCoffee = document.getElementById('valLivingCoffee');
   const valLivingTrim = document.getElementById('valLivingTrim');
 
   function updateBeforeAfterClip(percent) {
@@ -1969,6 +1970,29 @@
     }
   }
 
+  // Keep the current comparison image visible until the replacement has loaded.
+  // A timed src swap can reveal the viewport background while a room JPEG is decoding.
+  function loadComparisonImage(img, src, fade = false) {
+    if (!img || !src) return;
+    if (img.src === new URL(src, document.baseURI).href && img.complete && img.naturalWidth > 0) return;
+
+    const requestId = (Number(img.dataset.loadRequestId) || 0) + 1;
+    img.dataset.loadRequestId = String(requestId);
+    const preload = new Image();
+    preload.onload = () => {
+      if (img.dataset.loadRequestId !== String(requestId)) return;
+      if (fade) img.style.opacity = '0.6';
+      img.src = preload.src;
+      img.style.opacity = '1';
+    };
+    preload.onerror = () => {
+      // Preserve the last valid room image instead of displaying a blank preview.
+      if (img.dataset.loadRequestId === String(requestId)) img.style.opacity = '1';
+    };
+    preload.src = src;
+    if (preload.complete && preload.naturalWidth > 0) preload.onload();
+  }
+
   function applyPreset(presetKey, animate = true) {
     studioActivePreset = presetKey;
     const room = STUDIO_DATA[studioActiveRoom];
@@ -1984,23 +2008,10 @@
     });
 
     // Before image is ALWAYS the original baseline warm-neutral design
-    if (compImgBefore) {
-      compImgBefore.src = room.presets['warm-neutral'].image;
-    }
+    if (compImgBefore) loadComparisonImage(compImgBefore, room.presets['warm-neutral'].image);
 
     // After image
-    if (compImgAfter) {
-      if (animate) {
-        compImgAfter.style.opacity = '0.6';
-        setTimeout(() => {
-          compImgAfter.src = preset.image;
-          compImgAfter.style.opacity = '1';
-        }, 110);
-      } else {
-        compImgAfter.src = preset.image;
-        compImgAfter.style.opacity = '1';
-      }
-    }
+    if (compImgAfter) loadComparisonImage(compImgAfter, preset.image, animate);
 
     // Clear previous surface tints
     clearAllSurfaceOverlays();
@@ -2199,6 +2210,7 @@
       else if (surfaceId === 'living-curtains' && valLivingCurtains) valLivingCurtains.textContent = name;
       else if (surfaceId === 'living-accent' && valLivingAccent) valLivingAccent.textContent = name;
       else if (surfaceId === 'living-wood' && valLivingWood) valLivingWood.textContent = name;
+      else if (surfaceId === 'living-coffee-table' && valLivingCoffee) valLivingCoffee.textContent = name;
 
       // Real-time visible surface recoloring via precision mask overlay
       setSurfaceLayer(surfaceId, color, 0.82);
@@ -2232,6 +2244,7 @@
       btn.classList.add('active');
       const name = btn.getAttribute('data-name');
       if (valKitchenHardware) valKitchenHardware.textContent = name;
+      setSurfaceLayer('kitchen-hardware', btn.getAttribute('data-color') || '#C59B4B', 1);
     });
   });
 
@@ -2241,6 +2254,7 @@
       btn.classList.add('active');
       const name = btn.getAttribute('data-name');
       if (valLivingTrim) valLivingTrim.textContent = name;
+      setSurfaceLayer('living-metal', btn.getAttribute('data-color') || '#C59B4B', 1);
     });
   });
 
